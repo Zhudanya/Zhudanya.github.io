@@ -1,6 +1,6 @@
 ---
 title: "Harness Engineering 实践：让 AI Agent 自主验证游戏服务器"
-date: 2025-03-24 20:00:00 +0800
+date: 2026-03-24 20:00:00 +0800
 categories: [AI, Engineering]
 tags: [harness-engineering, ai-agent, game-dev, go]
 ---
