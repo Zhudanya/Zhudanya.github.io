@@ -1,6 +1,6 @@
 ---
 title: "learn-claude-code 学习笔记（四）：Subagent —— 大任务拆小，上下文隔离"
-date: 2026-03-29 23:00:00 +0800
+date: 2026-03-22 20:00:00 +0800
 categories: [AI, learn-claude-code]
 tags: [ai-agent, harness-engineering, claude-code, subagent]
 ---
