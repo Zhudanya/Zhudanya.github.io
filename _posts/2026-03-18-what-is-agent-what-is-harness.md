@@ -1,6 +1,6 @@
 ---
 title: "搞清楚 Agent 和 Harness 到底是什么"
-date: 2026-03-27 20:00:00 +0800
+date: 2026-03-18 20:00:00 +0800
 categories: [AI, Engineering]
 tags: [ai-agent, harness-engineering, llm]
 ---
