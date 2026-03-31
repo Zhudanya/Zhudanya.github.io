@@ -292,6 +292,56 @@ Docs/（沉淀）→ 规划和结果自动写入 Version/
 
 ---
 
+## 进阶工具的使用方式
+
+### Shell 强制编排 vs 对话命令
+
+同一个流水线有两种跑法：
+
+| 方式 | 命令 | 适合什么 |
+|------|------|---------|
+| `/auto-work "需求"` | 在 Claude Code 对话中输入 | 小任务、想中途干预 |
+| `bash .claude/scripts/auto-work-loop.sh "需求"` | 在终端直接跑 | 大任务、全自动无人值守 |
+
+区别在于：对话命令靠 Agent 自觉执行步骤（可能跳步），Shell 脚本在外部强制编排每个阶段——每阶段启动独立的 `claude -p` 进程，上下文隔离，不可跳步。
+
+### 红蓝对抗
+
+```bash
+bash Tools/auto-research/red-blue-loop.sh -n 5
+```
+
+Shell 自动编排：red-team 找 bug → blue-team 修 bug → 编译检查 → 再找 → 找不到就停 → 自动提取经验到 rules/memory。不需要手动复制粘贴 red-team 的报告。
+
+### auto-research 自动迭代
+
+```bash
+# 1. 检查环境
+bash Tools/auto-research/check-env.sh
+# 2. 冒烟测试
+bash Tools/auto-research/tests/smoke-test.sh
+# 3. 写任务定义
+cp Tools/auto-research/program-template.md Tools/.cache/auto-research/program.md
+# 4. 跑
+bash Tools/auto-research/orchestrator.sh -n 10 -t server
+# 5. 月底看汇总
+bash Tools/auto-research/monthly-report.sh
+```
+
+适合可量化验证的任务（补单测、加 GM 命令、纯逻辑重构）。不适合 UI 和网络同步。
+
+### Skill Creator
+
+在 Claude Code 对话中加载：
+
+```
+> 加载 skill-creator，帮我创建一个"添加 RPC Handler"的 skill
+```
+
+Agent 按框架走：意图捕获 → 起草 SKILL.md → 创建测试用例 → A/B 对比测试 → 评分（≥70 分发布）→ 迭代优化。解决"skill 写了不知道有没有效"的问题。
+
+---
+
 ## 怎么从零搭建类似的 Harness
 
 如果你想为自己的项目搭一套，优先级：
