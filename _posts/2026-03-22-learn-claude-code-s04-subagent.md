@@ -220,6 +220,8 @@ s04 解决的问题和 s03 不同但互补：
 
 下一篇我们看 s05：用到什么知识，临时加载什么知识——Skill 系统是怎么回事。
 
+**Go 语言实现**：[s04/main.go](https://github.com/Zhudanya/learn-claude-code/tree/main/agents_go/s04/main.go)
+
 ---
 
 *本文是 learn-claude-code 系列学习笔记的第四篇，基于 [learn-claude-code](https://github.com/shareAI-lab/learn-claude-code) 仓库的 s04 课程。*

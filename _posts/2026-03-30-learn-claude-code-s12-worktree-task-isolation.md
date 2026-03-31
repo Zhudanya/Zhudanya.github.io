@@ -221,6 +221,8 @@ s12 是工具最多的一课：
 
 这就是这个项目的核心论点：**模型是 Agent 的大脑，Harness 是 Agent 的身体和环境。** 造好 Harness，Agent 会完成剩下的。
 
+**Go 语言实现**：[s12/main.go](https://github.com/Zhudanya/learn-claude-code/tree/main/agents_go/s12/main.go)
+
 ---
 
 *本文是 learn-claude-code 系列学习笔记的最后一篇，基于 [learn-claude-code](https://github.com/shareAI-lab/learn-claude-code) 仓库的 s12 课程。感谢 [shareAI-lab](https://github.com/shareAI-lab) 提供的优秀教学仓库。*

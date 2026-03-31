@@ -260,6 +260,8 @@ s05 解决的是 Harness 公式里 **Knowledge** 的部分——怎么给 Agent 
 
 下一篇我们看 s06：上下文总会满，要有办法腾地方——上下文压缩是怎么回事。
 
+**Go 语言实现**：[s05/main.go](https://github.com/Zhudanya/learn-claude-code/tree/main/agents_go/s05/main.go)
+
 ---
 
 *本文是 learn-claude-code 系列学习笔记的第五篇，基于 [learn-claude-code](https://github.com/shareAI-lab/learn-claude-code) 仓库的 s05 课程。*

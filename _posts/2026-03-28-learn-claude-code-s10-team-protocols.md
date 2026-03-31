@@ -210,6 +210,8 @@ s10 在 s09 的通信通道上加了**结构化协议**。s09 的消息是自由
 
 下一篇看 s11：队友自己看看板，有活就认领——自治 Agent。
 
+**Go 语言实现**：[s10/main.go](https://github.com/Zhudanya/learn-claude-code/tree/main/agents_go/s10/main.go)
+
 ---
 
 *本文是 learn-claude-code 系列学习笔记的第十篇，基于 [learn-claude-code](https://github.com/shareAI-lab/learn-claude-code) 仓库的 s10 课程。*

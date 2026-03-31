@@ -290,6 +290,8 @@ s01 的全部内容就这些：一个 while 循环 + 一个 bash 工具。代码
 
 下一篇我们看 s02：怎么在不改循环的前提下，给 Agent 加更多工具。
 
+**Go 语言实现**：[s01/main.go](https://github.com/Zhudanya/learn-claude-code/tree/main/agents_go/s01/main.go)
+
 ---
 
 *本文是 learn-claude-code 系列学习笔记的第一篇，基于 [learn-claude-code](https://github.com/shareAI-lab/learn-claude-code) 仓库的 s01 课程。*

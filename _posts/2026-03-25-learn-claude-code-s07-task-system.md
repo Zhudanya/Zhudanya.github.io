@@ -224,6 +224,8 @@ C:\Users\{用户名}\AppData\Local\Temp\claude\{项目路径编码}\{会话ID}\t
 
 下一篇我们看 s08：慢操作丢后台，Agent 继续想下一步——后台执行是怎么回事。
 
+**Go 语言实现**：[s07/main.go](https://github.com/Zhudanya/learn-claude-code/tree/main/agents_go/s07/main.go)
+
 ---
 
 *本文是 learn-claude-code 系列学习笔记的第七篇，基于 [learn-claude-code](https://github.com/shareAI-lab/learn-claude-code) 仓库的 s07 课程。*

@@ -189,6 +189,8 @@ s11 的核心变化就一个：队友的外层循环从 `for` 变成了 `while T
 
 下一篇是最后一课 s12：各干各的目录，互不干扰——Worktree 隔离。
 
+**Go 语言实现**：[s11/main.go](https://github.com/Zhudanya/learn-claude-code/tree/main/agents_go/s11/main.go)
+
 ---
 
 *本文是 learn-claude-code 系列学习笔记的第十一篇，基于 [learn-claude-code](https://github.com/shareAI-lab/learn-claude-code) 仓库的 s11 课程。*

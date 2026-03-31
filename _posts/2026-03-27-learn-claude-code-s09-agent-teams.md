@@ -190,6 +190,8 @@ s09 从单兵作战升级到团队协作。核心就两件事：
 
 下一篇看 s10：队友之间要有统一的沟通规矩——团队协议。
 
+**Go 语言实现**：[s09/main.go](https://github.com/Zhudanya/learn-claude-code/tree/main/agents_go/s09/main.go)
+
 ---
 
 *本文是 learn-claude-code 系列学习笔记的第九篇，基于 [learn-claude-code](https://github.com/shareAI-lab/learn-claude-code) 仓库的 s09 课程。*

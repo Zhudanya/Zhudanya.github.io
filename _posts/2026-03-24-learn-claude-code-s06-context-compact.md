@@ -198,6 +198,8 @@ s06 解决的是上下文的**物理限制**。前面几课的机制（todo、su
 
 下一篇我们进入第三阶段——s07：大目标要拆成小任务，排好序，记在磁盘上。
 
+**Go 语言实现**：[s06/main.go](https://github.com/Zhudanya/learn-claude-code/tree/main/agents_go/s06/main.go)
+
 ---
 
 *本文是 learn-claude-code 系列学习笔记的第六篇，基于 [learn-claude-code](https://github.com/shareAI-lab/learn-claude-code) 仓库的 s06 课程。*

@@ -247,6 +247,8 @@ Harness 提供了三样东西：
 
 下一篇我们看 s04：大任务拆小，每个小任务干净的上下文——子 Agent 是怎么回事。
 
+**Go 语言实现**：[s03/main.go](https://github.com/Zhudanya/learn-claude-code/tree/main/agents_go/s03/main.go)
+
 ---
 
 *本文是 learn-claude-code 系列学习笔记的第三篇，基于 [learn-claude-code](https://github.com/shareAI-lab/learn-claude-code) 仓库的 s03 课程。*

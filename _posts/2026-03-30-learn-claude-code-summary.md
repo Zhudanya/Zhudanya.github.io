@@ -104,6 +104,8 @@ while True:
 
 **这就是 Harness Engineering 的核心：不改模型，改环境。**
 
+**全部 Go 实现**：[agents_go/](https://github.com/Zhudanya/learn-claude-code/tree/main/agents_go)
+
 ---
 
 *本文是 learn-claude-code 系列学习笔记的完结篇。全部 12 篇文章基于 [learn-claude-code](https://github.com/shareAI-lab/learn-claude-code) 仓库。Go 语言实现版本见同仓库 `agents_go/` 目录。*
