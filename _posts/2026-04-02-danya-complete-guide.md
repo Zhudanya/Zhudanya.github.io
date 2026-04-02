@@ -83,17 +83,45 @@ danya
 
 模型配置保存在 `~/.danya/config.json`，无需手动编辑。
 
-#### 多模型协同
+#### 多模型协同（多 Agent 模型配置）
 
-Danya 支持 4 种语义指针，让不同任务用不同模型：
+Danya 通过 4 种语义指针控制不同任务使用不同模型：
 
-```yaml
-pointers:
-  main: "DeepSeek V3"     # 主对话用最强模型
-  task: "Qwen Max"        # 子任务用便宜模型
-  compact: "GLM-4"        # 上下文压缩用快速模型
-  quick: "GLM-4"          # 分类判断用快速模型
+| 指针 | 用途 | 什么时候用 |
+|------|------|-----------|
+| `main` | 主对话、编码、审查 | 用户直接对话、/auto-work 的编码阶段 |
+| `task` | 子 Agent（subagent、background task） | Agent 启动 subagent 搜索代码、分析文件 |
+| `compact` | 上下文压缩摘要 | 对话接近上下文窗口时自动压缩 |
+| `quick` | 快速分类判断 | /auto-work 的 Stage 0 分类 |
+
+**配置方式 1：对话内配置**
+
+在 Danya 中输入 `/model`，添加多个模型后，在模型列表中给每个模型设置指针角色。
+
+**配置方式 2：直接编辑配置文件**
+
+编辑 `~/.danya/config.json`：
+
+```json
+{
+  "modelPointers": {
+    "main": "DeepSeek V3",
+    "task": "Qwen Max",
+    "compact": "GLM-4",
+    "quick": "GLM-4"
+  }
+}
 ```
+
+**省钱策略参考**：
+
+| 策略 | main | task | compact | quick |
+|------|------|------|---------|-------|
+| 全力输出 | Claude Opus | Claude Sonnet | Claude Haiku | Claude Haiku |
+| 国内省钱 | DeepSeek V3 | Qwen Max | GLM-4 | GLM-4 |
+| 单模型 | 同一个 | 同一个 | 同一个 | 同一个 |
+
+如果只配了一个模型，所有指针自动指向它，不需要额外配置。
 
 ### 3. 初始化 Harness
 
