@@ -131,6 +131,92 @@ All required dependencies found.
 
 ---
 
+## CLI 启动参数
+
+### 基础参数
+
+| 参数 | 说明 | 示例 |
+|------|------|------|
+| `[prompt]` | 直接传入提示词 | `danya "分析这个项目"` |
+| `--cwd <path>` | 指定工作目录 | `danya --cwd /path/to/project` |
+| `-p, --print` | 非交互模式（输出结果后退出，适合脚本/管道） | `danya -p "解释这个函数"` |
+| `--model <name>` | 指定使用的模型 | `danya --model opus` |
+| `--system-prompt <prompt>` | 自定义系统提示词 | `danya --system-prompt "你是 Go 专家"` |
+| `--append-system-prompt <prompt>` | 在默认系统提示词后追加内容 | `danya --append-system-prompt "只用中文回答"` |
+| `--verbose` | 详细输出模式 | `danya --verbose` |
+
+### 权限与安全
+
+| 参数 | 说明 | 示例 |
+|------|------|------|
+| `--dangerously-skip-permissions` | 跳过所有权限确认（Agent 全自动，不会弹确认框） | `danya -p "重构代码" --dangerously-skip-permissions` |
+| `--permission-mode <mode>` | 设置权限模式 | `danya --permission-mode dontAsk` |
+| `--max-budget-usd <amount>` | API 最大花费限制（美元），仅 `--print` 模式 | `danya -p "写测试" --max-budget-usd 5` |
+
+**权限模式选项**：
+
+| 模式 | 说明 |
+|------|------|
+| `default` | 默认模式，危险操作需确认 |
+| `acceptEdits` | 自动接受文件编辑，其他操作仍需确认 |
+| `dontAsk` | 不弹任何确认（等同于 `--dangerously-skip-permissions`） |
+| `plan` | 规划模式，只分析不执行 |
+| `bypassPermissions` | 绕过权限检查 |
+
+### 工具控制
+
+| 参数 | 说明 | 示例 |
+|------|------|------|
+| `--allowedTools <tools>` | 允许使用的工具列表 | `danya -p "搜索代码" --allowedTools "Read,Grep,Glob"` |
+| `--disallowedTools <tools>` | 禁止使用的工具列表 | `danya --disallowedTools "Bash,Write"` |
+| `--tools <tools>` | 指定可用工具集（仅 `--print` 模式） | `danya -p "读文件" --tools "Read,Grep"` |
+
+### 输出格式
+
+| 参数 | 说明 | 示例 |
+|------|------|------|
+| `--output-format <format>` | 输出格式：text / json / stream-json | `danya -p "分析" --output-format json` |
+| `--input-format <format>` | 输入格式：text / stream-json | `danya -p --input-format stream-json` |
+| `--json-schema <schema>` | 结构化输出的 JSON Schema | `danya -p "提取信息" --json-schema '{"type":"object"}'` |
+| `--include-partial-messages` | 流式输出中间消息 | `danya -p --output-format stream-json --include-partial-messages` |
+
+### MCP 配置
+
+| 参数 | 说明 | 示例 |
+|------|------|------|
+| `--mcp-config <config>` | 加载 MCP Server 配置 | `danya --mcp-config mcp-servers.json` |
+
+### 调试
+
+| 参数 | 说明 | 示例 |
+|------|------|------|
+| `-d, --debug [filter]` | 调试模式（可按类别过滤） | `danya --debug "api,hooks"` |
+| `--debug-verbose` | 详细调试输出 | `danya --debug-verbose` |
+
+### 常用组合示例
+
+```bash
+# 无人值守全自动开发（跳过权限，不弹确认）
+danya -p "实现武器升级系统" --dangerously-skip-permissions
+
+# 只允许读取和搜索（安全模式，不改文件）
+danya -p "分析项目架构" --allowedTools "Read,Grep,Glob,Bash"
+
+# 结构化 JSON 输出（适合脚本处理）
+danya -p "列出所有 TODO" --output-format json
+
+# 限制花费 5 美元
+danya -p "写完整测试" --dangerously-skip-permissions --max-budget-usd 5
+
+# 规划模式（只分析不执行）
+danya --permission-mode plan
+
+# 自定义系统提示词
+danya --append-system-prompt "所有回答使用中文，代码注释也用中文"
+```
+
+---
+
 ## .danya/ 目录结构
 
 ```
