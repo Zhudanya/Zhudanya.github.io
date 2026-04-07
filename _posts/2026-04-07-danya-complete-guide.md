@@ -1,6 +1,6 @@
 ---
 title: "Danya 完全使用指南 — 游戏开发 AI 编程助手"
-date: 2026-04-02 10:00:00 +0800
+date: 2026-04-07 10:00:00 +0800
 categories: [AI Agent, Game Development]
 tags: [danya, ai-agent, game-dev, harness, cli]
 pin: true
@@ -11,7 +11,7 @@ toc: true
 
 Danya 是一个运行在终端中的 AI 编程助手，**专门为游戏开发场景设计**。它不是通用的代码补全工具，而是一个理解游戏项目架构、强制执行质量标准、能自动化整个开发工作流的 Agent。
 
-**开箱即用** — 进入游戏项目启动 Danya，它会自动检测引擎类型（Unity / Unreal / Godot / Go 服务端），生成完整的 Harness 治理体系（规则、命令、Hook、记忆），不需要手动搭建任何环境。
+**开箱即用** — 进入游戏项目启动 Danya，它会自动检测引擎类型（Unity / Unreal / Godot / Go 服务端 / C++ 服务端 / Java 服务端 / Node.js 服务端），生成完整的 Harness 治理体系（规则、命令、Hook、记忆），不需要手动搭建任何环境。
 
 **核心定位**：将经过验证的 Game Harness Engineering 内置到 AI Agent 中，让游戏开发者开箱即用。
 
@@ -629,6 +629,7 @@ Edit → Guard → Syntax → Verify → Commit → Review → Push
 - **Gate 1 Syntax**：PostToolUse Hook，编辑后即时语法检查
 - **Gate 2 Verify**：工具调用，编译 + 测试
 - **Gate 3 Commit**：PreToolUse Hook，commit 前跑 lint + test
+- **Gate 3.5 AssetGuard**：Pre-commit Hook，拦截 >5MB 且未被 Git LFS 追踪的二进制文件（阈值可通过 `ASSET_GUARD_THRESHOLD` 环境变量配置；缺少 `.gitattributes` 时发出警告）
 - **Gate 4 Review**：AI + ScoreReview 工具，100 分制评分
 - **Gate 5 Push**：PreToolUse Hook，检查 push-approved 令牌
 
@@ -646,6 +647,9 @@ Danya 启动时自动检测项目引擎类型：
 | Unreal | `*.uproject` | UPROPERTY、UE_LOG、FRunnable、命名规范(F/U/A/E) |
 | Godot | `project.godot` | 类型提示、信号配对、_physics_process、资源加载 |
 | Go Server | `go.mod` | 错误包装、safego.Go、RPC handler 规范、ECS 约束 |
+| C++ Server | `CMakeLists.txt` | 内存管理、并发模型、构建系统知识 |
+| Java Server | `pom.xml` / `build.gradle` + 游戏关键词 | GC 调优、Netty Pipeline、并发模型 |
+| Node.js Server | `package.json` + 游戏框架检测 | 事件循环、WebSocket、状态同步 |
 
 ### Workspace 三层隔离
 
@@ -833,12 +837,15 @@ danya analyze --metric compare --days 7
 | Unreal Engine | `*.uproject` | UnrealBuild | 6 条 |
 | Godot | `project.godot` | GodotBuild | 5 条 |
 | Go 游戏服务器 | `go.mod` | GameServerBuild | 9 条 |
+| C++ 游戏服务器 | `CMakeLists.txt` | CppServerBuild | 6 条 |
+| Java 游戏服务器 | `pom.xml` / `build.gradle` + 游戏关键词 | JavaServerBuild | 6 条 |
+| Node.js 游戏服务器 | `package.json` + 游戏框架检测 | NodeServerBuild | 5 条 |
 
 通用审查规则 4 条，所有项目自动应用。
 
 ---
 
-## 13 个游戏专用工具
+## 18 个游戏专用工具
 
 | 工具 | 用途 | 适用引擎 |
 |------|------|---------|
@@ -847,14 +854,135 @@ danya analyze --metric compare --days 7
 | UnrealBuild | UBT 编译 | UE |
 | GodotBuild | GDScript/C# 检查 | Godot |
 | GameServerBuild | 分级验证 (lint/build/test) | Go Server |
+| CppServerBuild | C++ 服务端构建 (CMake/Ninja + cppcheck + ctest) | C++ Server |
+| JavaServerBuild | Java 服务端构建 (Maven/Gradle + checkstyle + JUnit) | Java Server |
+| NodeServerBuild | Node.js 服务端构建 (tsc + ESLint + Vitest) | Node.js Server |
 | ProtoCompile | Protobuf 编译 + 桩代码生成 | 跨引擎 |
+| ProtoCompat | Protobuf 破坏性变更检测 | 跨引擎 |
+| PerfLint | 游戏热路径静态性能分析 | Unity, UE, Godot |
+| ShaderCheck | Shader 静态验证（变体爆炸、采样器限制、语法） | Unity, UE, Godot |
 | ConfigGenerate | 配置表生成 | 跨引擎 |
 | OrmGenerate | ORM 代码生成 | Go Server |
 | ScoreReview | 100 分制评分审查 | 跨引擎 |
 | GateChain | 门禁链编排 | 跨引擎 |
 | KnowledgeSediment | 知识自动沉淀 | 跨引擎 |
 | ArchitectureGuard | 依赖方向检查 | 跨引擎 |
-| AssetCheck | 资源引用完整性 | Unity, Godot |
+| AssetCheck | 资源引用完整性 + 命名规范 + 深层嵌套检测 | Unity, UE, Godot |
+
+---
+
+## Phase 4: 性能与多语言优化 (v0.2.0)
+
+v0.2.0 新增 5 个工具、增强 1 个工具、扩展 3 种服务端语言支持、新增 1 个 Git Hook。
+
+### 新增工具
+
+#### PerfLint — 游戏热路径静态性能分析
+
+自动检测 Update/Tick/_process 等热路径中的性能反模式：
+
+**Unity（7 条规则）**：
+
+```csharp
+// ❌ PerfLint 会报警：GetComponent in Update
+void Update() {
+    var rb = GetComponent<Rigidbody>();  // 每帧 GetComponent
+    rb.AddForce(Vector3.up);
+}
+
+// ✅ 正确写法：缓存引用
+private Rigidbody _rb;
+void Awake() { _rb = GetComponent<Rigidbody>(); }
+void Update() { _rb.AddForce(Vector3.up); }
+```
+
+检测项：`GetComponent`、`Camera.main`、`Instantiate`、`Find`、LINQ in Update、未缓存 `WaitForSeconds`。
+
+**Unreal（6 条规则）**：`FindActor`、`Cast`、`NewObject`、`FString +` in Tick、`LineTrace` 频率。
+
+**Godot（5 条规则）**：`get_node`、`instantiate`、`get_children` in `_process`、信号 connect/disconnect 配对。
+
+#### ProtoCompat — Protobuf 破坏性变更检测
+
+分析 `.proto` 文件的 git diff，检测可能破坏客户端兼容性的变更：
+
+```bash
+# 使用示例：检查当前分支的 proto 变更
+danya -p "用 ProtoCompat 检查 proto/ 目录的兼容性"
+```
+
+| 严重级别 | 检测项 |
+|---------|--------|
+| CRITICAL | 字段编号变更、字段类型变更、枚举值重新编号 |
+| HIGH | 删除字段未 reserve、删除 RPC 方法、删除 service |
+
+#### ShaderCheck — Shader 静态验证
+
+支持 Unity (ShaderLab/HLSL)、Unreal (HLSL/USF)、Godot (GDScript Shader)：
+
+```
+# 检测报告示例
+[CRITICAL] weapon_skin.shader: multi_compile 组合数 512 > 256 上限（变体爆炸）
+[HIGH] water_surface.shader: sampler 数量 18 > 16 限制
+[MEDIUM] particle_effect.shader: 片元着色器函数复杂度过高（嵌套循环 >3 层）
+```
+
+#### CppServerBuild — C++ 服务端构建
+
+支持 quick/build/full 三级验证，自动检测 CMakeLists.txt：
+
+| 级别 | 执行内容 |
+|------|---------|
+| quick | cppcheck 静态分析 |
+| build | CMake + Ninja 编译 |
+| full | build + ctest 测试 |
+
+#### JavaServerBuild — Java 服务端构建
+
+自动检测 Maven (pom.xml) vs Gradle (build.gradle)：
+
+| 级别 | Maven | Gradle |
+|------|-------|--------|
+| quick | `mvn checkstyle:check` | `gradle checkstyleMain` |
+| build | `mvn compile` | `gradle build` |
+| full | build + `mvn test` | build + `gradle test` |
+
+#### NodeServerBuild — Node.js 服务端构建
+
+自动检测 bun vs npm，支持 colyseus / socket.io 等游戏框架：
+
+| 级别 | 执行内容 |
+|------|---------|
+| quick | ESLint |
+| build | tsc 编译 |
+| full | build + Vitest 测试 |
+
+### AssetCheck 增强
+
+**新增 Unreal Engine 支持**：
+- 命名规范检查：SM_（静态网格）、T_（纹理）、M_（材质）、BP_（蓝图）前缀
+- 源资源体积警告：纹理 >50MB、网格 >100MB
+- 软引用验证
+
+**深层嵌套检测**（全引擎）：
+- Unity：Prefab Transform 父链 >10 层
+- Godot：场景节点深度 >10 层
+
+**非活跃大对象检测**：
+- Unity 场景中 inactive 且 children >20 的 GameObject
+
+### AssetGuard Hook
+
+Pre-commit 阶段自动拦截未被 Git LFS 追踪的大二进制文件（默认 >5MB）：
+
+```bash
+# 自定义阈值（单位：字节）
+export ASSET_GUARD_THRESHOLD=10485760  # 10MB
+
+# 缺少 .gitattributes 时会发出警告：
+# [WARN] No .gitattributes found — consider configuring Git LFS
+# [BLOCK] Assets/Textures/hero.psd (12.3MB) not tracked by Git LFS
+```
 
 ---
 
